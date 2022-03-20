@@ -14,21 +14,20 @@ public class DebitCard{
     public static class CardInfo {
         private String numberCard;
     }
-
-    public static CardInfo getCardInfo() {
+    public static CardInfo getOtherCard(String card) {
+        return new CardInfo(card);
+    }
+    public static CardInfo getApprovedCard() {
         return new CardInfo("4444_4444_4444_4441");
     }
-
-    public static CardInfo getOtherCardInfo() {
+    public static CardInfo getDeclinedCard() {
         return new CardInfo("4444_4444_4444_4442");
     }
-
     public static String getRandomMonth() {
         String[] month = {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"};
         int n = (int) Math.round(Math.random() * month.length);
         return month[n];
     }
-
     public static String getRandomYear() {
         int num = faker.number().numberBetween(22, 28);
         String year  = Integer. toString(num);
