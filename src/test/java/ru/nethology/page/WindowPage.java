@@ -14,12 +14,12 @@ public class WindowPage {
 
     private ElementsCollection window = $$("[class=\"notification__content\"]");
 
-    public  WindowPage windowSuccefully(){
+    public  CardDetails checkSuccessWindow(){
         window.get(0).shouldBe(visible, Duration.ofSeconds(15)).shouldHave(exactText("Операция одобрена Банком."));
-        return new WindowPage();
+        return new CardDetails();
     }
-    public WindowPage  windowError(){
+    public CardDetails checkErrorWindow(){
         window.get(1).shouldBe(visible, Duration.ofSeconds(15)).shouldHave(exactText("Ошибка! Банк отказал в проведении операции."));
-        return new WindowPage();
+        return new CardDetails();
     }
 }

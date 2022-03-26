@@ -14,6 +14,8 @@ public class DebitCard{
     public static class CardInfo {
         private String numberCard;
     }
+
+
     public static CardInfo getOtherCard(String card) {
         return new CardInfo(card);
     }

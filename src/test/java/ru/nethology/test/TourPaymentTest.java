@@ -3,6 +3,7 @@ package ru.nethology.test;
 import com.codeborne.selenide.logevents.SelenideLogger;
 import io.qameta.allure.selenide.AllureSelenide;
 import lombok.SneakyThrows;
+import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,118 +36,79 @@ public class TourPaymentTest {
     }
 
     @Test
-    @SneakyThrows
     void shouldPayWithAnApprovedDebitCard() {
-        var choiceOfPayment = new ChoiceOfPayment();
-        choiceOfPayment.debitCardPayment();
+        var choiceOfPayment = new ChoiceOfPayment().debitCardPayment();
         var payCard = new CardDetails().payCard(DebitCard.getApprovedCard());
-        var window = new WindowPage().windowSuccefully();
+        var window = new WindowPage().checkSuccessWindow();
+        var status = new DatabaseQueries().checkDatabaseWhenPayingWithDebitCard(
+                "jdbc:mysql://localhost:3306/app", "app", "pass");
 
-        String cardSql = "SELECT status FROM payment_entity ORDER BY created DESC LIMIT 1;";
-
-        try (
-                var conn = DriverManager.getConnection(
-                        "jdbc:mysql://localhost:3306/app", "app", "pass"
-                );
-                var cardsStmt = conn.prepareStatement(cardSql);
-        ) {
-            try (var rs = cardsStmt.executeQuery()) {
-                while (rs.next()) {
-                    var status = rs.getString("status");
-                    assertEquals("APPROVED", status);
-                }
-            }
-        }
+        assertEquals("APPROVED", status);
     }
 
     @Test
-    @SneakyThrows
     void shouldPayWithADeclinedDebitCard() {
+        var choiceOfPayment = new ChoiceOfPayment().debitCardPayment();
+        var payCard = new CardDetails().payCard(DebitCard.getDeclinedCard());
+        var window = new WindowPage().checkSuccessWindow();
+        var status = new DatabaseQueries().checkDatabaseWhenPayingWithDebitCard(
+                "jdbc:mysql://localhost:3306/app", "app", "pass");
+
+        assertEquals("DECLINED", status);
+
+
+    }
+
+    @Test
+    void shouldPayWithAnApprovedCreditCard() {
+        var choiceOfPayment = new ChoiceOfPayment().creditCardPayment();
+        var payCard = new CardDetails().payCard(DebitCard.getApprovedCard());
+        var window = new WindowPage().checkSuccessWindow();
+        var status = new DatabaseQueries().checkDatabaseWhenPayingWithCreditCard(
+                "jdbc:mysql://localhost:3306/app", "app", "pass");
+
+        assertEquals("APPROVED", status);
+
+    }
+
+    @Test
+    void shouldPayWithADeclinedCreditCard() {
+        var choiceOfPayment = new ChoiceOfPayment().creditCardPayment();
+        var payCard = new CardDetails().payCard(DebitCard.getDeclinedCard());
+        var window = new WindowPage().checkSuccessWindow();
+        var status = new DatabaseQueries().checkDatabaseWhenPayingWithCreditCard(
+                "jdbc:mysql://localhost:3306/app", "app", "pass");
+        assertEquals("DECLINED", status);
+    }
+
+
+    @Test
+    void shouldGiveBankRejectionError() {
         var choiceOfPayment = new ChoiceOfPayment();
         choiceOfPayment.debitCardPayment();
-        var payCard = new CardDetails().payCard(DebitCard.getDeclinedCard());
-        var window = new WindowPage().windowSuccefully();
-
-        String cardSql = "SELECT status FROM payment_entity ORDER BY created DESC LIMIT 1;";
-
-        try (
-                var conn = DriverManager.getConnection(
-                        "jdbc:mysql://localhost:3306/app", "app", "pass"
-                );
-                var cardsStmt = conn.prepareStatement(cardSql);
-        ) {
-            try (var rs = cardsStmt.executeQuery()) {
-                while (rs.next()) {
-                    var status = rs.getString("status");
-                    assertEquals("DECLINED", status);
-                }
-            }
-        }
-    }
-
-    @Test
-    @SneakyThrows
-    void shouldPayWithAnApprovedCreditCard() {
-        var choiceOfPayment = new ChoiceOfPayment();
-        choiceOfPayment.creditCardPayment();
-        var payCard = new CardDetails().payCard(DebitCard.getApprovedCard());
-        var window = new WindowPage().windowSuccefully();
-
-        String cardSql = "SELECT status FROM credit_request_entity ORDER BY created DESC LIMIT 1;";
-
-        try (
-                var conn = DriverManager.getConnection(
-                        "jdbc:mysql://localhost:3306/app", "app", "pass"
-                );
-                var cardsStmt = conn.prepareStatement(cardSql);
-        ) {
-            try (var rs = cardsStmt.executeQuery()) {
-                while (rs.next()) {
-                    var status = rs.getString("status");
-                    assertEquals("APPROVED", status);
-                }
-            }
-        }
-    }
-
-    @Test
-    @SneakyThrows
-    void shouldPayWithADeclinedCreditCard() {
-        var choiceOfPayment = new ChoiceOfPayment();
-        choiceOfPayment.creditCardPayment();
-        var payCard = new CardDetails().payCard(DebitCard.getDeclinedCard());
-        var window = new WindowPage().windowSuccefully();
-
-        String cardSql = "SELECT status FROM credit_request_entity ORDER BY created DESC LIMIT 1;";
-
-        try (
-                var conn = DriverManager.getConnection(
-                        "jdbc:mysql://localhost:3306/app", "app", "pass"
-                );
-                var cardsStmt = conn.prepareStatement(cardSql);
-        ) {
-            try (var rs = cardsStmt.executeQuery()) {
-                while (rs.next()) {
-                    var status = rs.getString("status");
-                    assertEquals("DECLINED", status);
-                }
-            }
-        }
-
-    }
-
-    @Test
-    void shouldGiveBankRejectionError(){
-        var choiceOfPayment = new ChoiceOfPayment();
-        choiceOfPayment.creditCardPayment();
         var payCard = new CardDetails().payCard(DebitCard.getOtherCard("4444_5555_1111_2336"));
-        var window = new WindowPage().windowError();
+        var window = new WindowPage().checkErrorWindow();
     }
 
-//    @Test
-//    void shouldThrowAFieldError(){
-//        var choiceOfPayment = new ChoiceOfPayment();
-//        choiceOfPayment.creditCardPayment();
-//        var payCard = new CardDetails().payCard()
-//    }
+    @Test
+    void shouldThrowErrorInvalidFieldFormat() {
+        var choiceOfPayment = new ChoiceOfPayment();
+        choiceOfPayment.debitCardPayment();
+        var payCard = new CardDetails().paymentInInputFields(
+                "4444_5558_7777_6661", "", "23", "Кирилл Петров", "896"
+        );
+        var error = new CardDetails().error(0);
+        assertEquals("Неверный формат", error);
+    }
+
+    @Test
+    void shouldThrowCardExpirationError() {
+        var choiceOfPayment = new ChoiceOfPayment();
+        choiceOfPayment.debitCardPayment();
+        var payCard = new CardDetails().paymentInInputFields(
+                "4435_5324_7727_6661", "11", "29", "Антон Кириллов", "512"
+        );
+        var error = new CardDetails().error(0);
+        assertEquals("Неверно указан срок действия карты", error);
+    }
 }
