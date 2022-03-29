@@ -2,11 +2,8 @@ package ru.nethology.page;
 
 import com.codeborne.selenide.ElementsCollection;
 import lombok.val;
-import ru.nethology.payment.DebitCard;
+import ru.nethology.data.CardInfo;
 
-import java.time.Duration;
-
-import static com.codeborne.selenide.Condition.exactText;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
@@ -17,12 +14,12 @@ public class CardDetails {
     private ElementsCollection errorBelowField = $$("[class=\"input__sub\"]");
 
 
-    public WindowPage payCard(DebitCard.CardInfo info) {
+    public WindowPage payCard(CardInfo.NumberCard info) {
         fields.get(0).val(info.getNumberCard());
-        fields.get(1).val(DebitCard.getRandomMonth());
-        fields.get(2).val(DebitCard.getRandomYear());
-        fields.get(3).val(DebitCard.getRandomName());
-        fields.get(4).val(DebitCard.getRandomCode());
+        fields.get(1).val(CardInfo.getRandomMonth());
+        fields.get(2).val(CardInfo.getRandomYear());
+        fields.get(3).val(CardInfo.getRandomName());
+        fields.get(4).val(CardInfo.getRandomCode());
         button.get(1).click();
         return new WindowPage();
     }

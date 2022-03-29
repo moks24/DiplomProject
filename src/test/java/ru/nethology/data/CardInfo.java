@@ -1,29 +1,29 @@
-package ru.nethology.payment;
+package ru.nethology.data;
 
 import com.github.javafaker.Faker;
 import lombok.Value;
 
 import java.util.Locale;
 
-public class DebitCard{
-    private DebitCard(){}
+public class CardInfo {
+    private CardInfo(){}
 
     private static final Faker faker = new Faker(new Locale("ru"));
 
     @Value
-    public static class CardInfo {
+    public static class NumberCard {
         private String numberCard;
     }
 
 
-    public static CardInfo getOtherCard(String card) {
-        return new CardInfo(card);
+    public static NumberCard getOtherCard(String card) {
+        return new NumberCard(card);
     }
-    public static CardInfo getApprovedCard() {
-        return new CardInfo("4444_4444_4444_4441");
+    public static NumberCard getApprovedCard() {
+        return new NumberCard("4444_4444_4444_4441");
     }
-    public static CardInfo getDeclinedCard() {
-        return new CardInfo("4444_4444_4444_4442");
+    public static NumberCard getDeclinedCard() {
+        return new NumberCard("4444_4444_4444_4442");
     }
     public static String getRandomMonth() {
         String[] month = {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"};

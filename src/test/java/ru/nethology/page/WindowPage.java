@@ -15,11 +15,11 @@ public class WindowPage {
     private ElementsCollection window = $$("[class=\"notification__content\"]");
 
     public  CardDetails checkSuccessWindow(){
-        window.get(0).shouldBe(visible, Duration.ofSeconds(15)).shouldHave(exactText("Операция одобрена Банком."));
+        window.get(0).shouldBe(visible, Duration.ofSeconds(30)).shouldHave(exactText("Операция одобрена Банком."));
         return new CardDetails();
     }
     public CardDetails checkErrorWindow(){
-        window.get(1).shouldBe(visible, Duration.ofSeconds(15)).shouldHave(exactText("Ошибка! Банк отказал в проведении операции."));
+        window.get(1).shouldBe(visible, Duration.ofSeconds(30)).shouldHave(exactText("Ошибка! Банк отказал в проведении операции."));
         return new CardDetails();
     }
 }
