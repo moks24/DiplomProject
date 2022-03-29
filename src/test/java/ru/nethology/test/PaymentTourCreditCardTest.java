@@ -51,4 +51,34 @@ public class PaymentTourCreditCardTest {
         var status = new DatabaseQueries().checkDatabaseWhenPayingWithCreditCard();
         assertEquals("DECLINED", status);
     }
+
+    @Test
+    void shouldThrowErrorInvalidFieldFormat() {
+        var choiceOfPayment = new ChoiceOfPayment();
+        choiceOfPayment.creditCardPayment();
+        var payCard = new CardDetails().paymentInInputFields(
+                "5354_5566_7278_6621", "07", "25", "", "896"
+        );
+        var error = new CardDetails().error(0);
+        assertEquals("Неверный формат", error);
+    }
+
+    @Test
+    void shouldGiveBankRejectionError() {
+        var choiceOfPayment = new ChoiceOfPayment();
+        choiceOfPayment.creditCardPayment();
+        var payCard = new CardDetails().payCard(CardInfo.getOtherCard("4235_5535_1895_2543"));
+        var window = new WindowPage().checkErrorWindow();
+    }
+
+    @Test
+    void shouldThrowCardExpirationError() {
+        var choiceOfPayment = new ChoiceOfPayment();
+        choiceOfPayment.creditCardPayment();
+        var payCard = new CardDetails().paymentInInputFields(
+                "4435_5324_7727_6661", "99", "22", "Леонид Алехин", "512"
+        );
+        var error = new CardDetails().error(0);
+        assertEquals("Неверно указан срок действия карты", error);
+    }
 }

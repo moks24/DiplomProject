@@ -78,9 +78,11 @@ public class PaymentTourDebitCardTest {
         var choiceOfPayment = new ChoiceOfPayment();
         choiceOfPayment.debitCardPayment();
         var payCard = new CardDetails().paymentInInputFields(
-                "4435_5324_7727_6661", "11", "29", "Антон Кириллов", "512"
+                "4435_5324_7727_6661", "11", "29", "Леонид Агутин", "512"
         );
         var error = new CardDetails().error(0);
         assertEquals("Неверно указан срок действия карты", error);
     }
+
+
 }
