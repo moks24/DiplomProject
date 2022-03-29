@@ -3,17 +3,19 @@
 
 [План автоматизации тестирования сервиса покупки туров ]()
 ## Запуск
-Для запуска приложения и тестов должен быть установлен Docker или Docker Toolbox. Для загрузки репозитория используется команда: git clone https://github.com/Satura/DiplomaQA.git
+Для запуска приложения и тестов  должен быть установлен Docker или Docker Toolbox.
+Для загрузки репозитория используется команда: `git clone https://github.com/Satura/DiplomaQA.git`
 
-Для запуска docker-контейнера с СУБД MySQL и PostgreSQL, а также Node.js требуется открыть терминал в папке проекта и ввести команду docker-compose up -d
+Для запуска docker-контейнера с СУБД MySQL и PostgreSQL, а также Node.js требуется открыть терминал в папке проекта и ввести команду `docker-compose up -d`
 
-#Для запуска приложения и тестов с MySQL используются следующие команды:
+###Для запуска приложения и тестов с MySQL используются следующие команды:
 
-Запуск приложения java -jar aqa-shop.jar --spring.datasource.url=jdbc:mysql://localhost:3306/app
-Запуск автотестов ./gradlew -Ddb_url=jdbc:mysql://localhost:3306/app test
+- Запуск приложения `java -jar aqa-shop.jar --spring.datasource.url=jdbc:mysql://localhost:3306/app`. Дождаться появления строки `ru.netology.shop.ShopApplication : Started ShopApplication ...`
+- Запуск автотестов `./gradlew clean test -Ddb_url=jdbc:mysql://localhost:3306/app allureReport`
 
-#Для запуска приложения и тестов с PostgreSQL используются следующие команды:
+###Для запуска приложения и тестов с PostgreSQL используются следующие команды:
 
-Запуск приложения java -jar aqa-shop.jar --spring.datasource.url=jdbc:postgresql://localhost:5432/app
-Запуск автотестов ./gradlew  -Ddb_url=jdbc:postgresql://localhost:5432/app test
+- Запуск приложения `java -jar aqa-shop.jar --spring.datasource.url=jdbc:postgresql://localhost:5432/app`. Дождаться появления строки `ru.netology.shop.ShopApplication : Started ShopApplication ...`
+- Запуск автотестов `./gradlew clean test -Ddb_url=jdbc:postgresql://localhost:5432/app allureReport`
+
 
