@@ -1,7 +1,7 @@
 # Дипломный проект по курсу «Тестировщик ПО»
 ## Документация
 
-[План автоматизации тестирования сервиса покупки туров ](DiplomProject/documents/Plan.md)
+[План автоматизации тестирования сервиса покупки туров ](https://github.com/moks24/DiplomProject/blob/master/documents/Plan.md)
 ## Запуск
 Для запуска приложения и тестов  должен быть установлен Docker или Docker Toolbox.
 Для загрузки репозитория используется команда: `git clone https://github.com/moks24/DiplomProject.git`
